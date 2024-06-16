@@ -12,26 +12,21 @@ export default function Search() {
   // used to prevent rage clicks on form submits
   const [fetching, setFetching] = useState(false)
 
+  async function getDataForQuery(){
+    if(fetching ||query==='' || query===previousQuery) return
+    setFetching(true)
+    const res = await fetch (`https://www.googleapis.com/books/v1/volumes?langRestrict=en&maxResults=16&q=${query}`)
+    const data = await res. json()
+    setBookSearchResults(data.items)
+    setFetching(false)
+    setPreviousQuery(query)
+  }
+
   // TODO: When the Search Page loads, use useEffect to fetch data from:
   // https://www.googleapis.com/books/v1/volumes?langRestrict=en&maxResults=16&q=YOUR_QUERY
   // Use a query of "React" (?)
   useEffect(() => {
-    let controller = new AbortController()
-    async function bookSearchResults() {
-      try {
-      const res = await fetch (`https://www.googleapis.com/books/v1/volumes?langRestrict=en&maxResults=16&q=YOUR_QUERY`, {
-        signal: controller.signal
-      })
-      const data = await res.json()
-      setBookSearchResults(data)
-    } catch {
-      console.log('aborted')
-    }
-  }
-    //getData()
-    return () => {
-      controller.abort()
-    }
+    getDataForQuery()
   }, []); 
 
   // TODO: Write a submit handler for the form that fetches data from:
@@ -41,14 +36,8 @@ export default function Search() {
   // fetch has not finished
   // the query is unchanged
   async function handleSubmit(e) {
-    e.preventDefault()
-    if(fetching ||query==='' || query===previousQuery) return
-    setFetching(true)
-    const res = await fetch (`https://www.googleapis.com/books/v1/volumes?langRestrict=en&maxResults=16&q=${query}`)
-    const data = await res. json()
-    setBookSearchResults(data.items)
-    setFetching(false)
-    setPreviousQuery(query)
+    e.preventDefault();
+    getDataForQuery()
   };
 
   const inputRef = useRef()
