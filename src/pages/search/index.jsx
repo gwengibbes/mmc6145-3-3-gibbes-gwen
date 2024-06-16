@@ -72,7 +72,7 @@ export default function Search() {
         ? <div className={styles.bookList}>
             {/* TODO: render BookPreview components for each search result here based on bookSearchResults */}
             {bookSearchResults.map(bookSearchResult=>{
-              return (<BookPreview title={bookSearchResult.volumeInfo.title} authors={bookSearchResult.volumeInfo.authors} thumbnail={bookSearchResult.volumeInfo.imageLinks.thumbnail} previewLink={bookSearchResult.volumeInfo.previewLink} />)
+              return (<BookPreview title={bookSearchResult.volumeInfo?.title} authors={bookSearchResult.volumeInfo?.authors} thumbnail={bookSearchResult.volumeInfo?.imageLinks?.thumbnail} previewLink={bookSearchResult.volumeInfo?.previewLink} />)
             })}
           </div>
         : <NoResults
